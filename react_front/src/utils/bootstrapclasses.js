@@ -1,0 +1,13 @@
+export const app = "App d-filexbox bg-dark text-start p-2 text-white";
+export const last_requests = "bg-warning border rounded text-white"
+export const card_last_requests = 'card-image w-100'
+export const card_header = 'card-header'
+export const card_body = 'card-body'
+export const card_image = 'card-image w-100'
+export const card_footer = 'card-footer'
+export const card_main = 'card'
+export const card_link = 'card-link'
+export const card_date = 'card-link badge bg-warning'
+export const d_block = 'd-block w-100'
+export const spinner = 'spinner-border'
+export const rate = 'text-end ms-3 border border-light btn btn-warning';

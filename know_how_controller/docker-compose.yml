@@ -1,0 +1,39 @@
+services:
+  videoapp:
+    image: mksrt/know-how:controller
+    container_name: know_how
+    environment:
+      - spring.datasource.url=jdbc:mysql://db:3306/know-how_content-db?createIfNotExists=true?useSSL=false
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+      - spring.jpa.hibernate.ddl-auto=update
+        #-H2 data
+        #- spring.jpa.show-sql=true
+        #- spring.h2.console.enabled=true
+        #- spring.datasource.url=jdbc:h2:file:A:/path/carsRentData
+        #- spring.jpa.hibernate.ddl-auto=update
+        #- spring.datasource.generate-unique-name=false
+        #- spring.datasource.username=someUser
+        #- spring.datasource.password=Password
+      #- spring.datasource.url=jdbc:mysql://db:3306/know-how_content-db?createIfNotExists=true?useSSL=false
+    restart: always
+    depends_on:
+      - db
+      - front
+    ports:
+      - "8080:8080"
+  db:
+    image: mysql
+    container_name: know-how_sql_db
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=know-how_content-db
+    ports:
+      - "3306:3306"
+    restart: always
+  front:
+    image: mksrt/know-how:front
+    container_name: know_how-front
+    ports:
+      - "8081:8081"
