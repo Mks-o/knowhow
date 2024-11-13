@@ -38,8 +38,8 @@ public class KnowHowService implements ICnowHow {
 		if (req == null)
 			req = knowHowRequestsRepository.save(request.convertToEntity());
 		List<AnswerEntity> answers = knowHowRepository.findAllByRequest_id(req.getRequest_id());
-		if (answers.isEmpty())
-			answers = knowHowRepository.findAllByRequest(req.getRequest());
+		// if (answers.isEmpty())
+		// 	answers = knowHowRepository.findAllByRequest(req.getRequest());
 		if (answers.isEmpty()) {
 			try {
 				answers = findAnswer(req.convertToDto()).stream().map(x -> x.convertToEntity()).toList();

@@ -22,7 +22,7 @@ export async function fetch_something(url, body_value, method) {
         method:  method
     }
     if (body_value) headers_values.body = JSON.stringify(body_value)
-    console.log(headers_values);
+    //console.log(headers_values);
 
     const response = await fetch((url), headers_values );
     if (!response.ok) {
