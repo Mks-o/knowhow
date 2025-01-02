@@ -55,35 +55,39 @@ public class KnowHowService implements ICnowHow {
 	@Override
 	@Transactional
 	public List<AnswerDto> findAnswer(RequestDto request) throws IOException {
-		String link = "https://www.google.com/search?q=" + request.getRequest().replaceAll(" ", "%20");
-		String img_source = "https://unsplash.com/s/photos/" + request.getRequest().replaceAll(" ", "%20");
-		System.out.println("parse link:--->" + link);
-		System.out.println("parse link:--->" + img_source);
-		Document doc = Jsoup.connect(link).timeout(7000).get();
-		Document imgDoc = Jsoup.connect(img_source).timeout(7000).get();
-		doc.outputSettings().charset("ISO-8859-1");
-		imgDoc.outputSettings().charset("ISO-8859-1");
-		Document parsed_google_res = Jsoup.parse(doc.toString());
-		Document img_document_parsed = Jsoup.parse(imgDoc.toString());
-		List<String> img_src = new ArrayList<>();
-		if (img_document_parsed.getElementsByClass("_VG2i") != null)
-			img_src = img_document_parsed.getElementsByClass("_VG2i").select("img[src]").eachAttr("src");
-		Elements page_elements = parsed_google_res.select("div.MjjYud");
-		List<AnswerDto> answers = page_elements.stream().map(x -> {
-			String text = x.selectFirst("div.VwiC3b span") != null ? x.selectFirst("div.VwiC3b span").ownText() : "";
-			String url = x.selectFirst("cite span") != null ? x.selectFirst("cite span").ownText() : "";
-			if (text != "") {
-				AnswerDto answer = new AnswerDto(null, text, url, request.getRequest_id(), "no image", LocalDate.now(),
-						0, true);
-				return answer;
-			} else return null;
-		}).toList();
-		List<AnswerDto> filter = answers.stream().filter(x -> x != null).toList();
-		String jsonArray = objectMapper.writeValueAsString(img_src);
-		for (AnswerDto answerDto : filter) answerDto.setImagessrc(jsonArray);
-		List<AnswerEntity> entities = filter.stream().map(x -> x.convertToEntity()).toList();
-		return knowHowRepository.saveAll(entities).stream().map(r->r.consertToDto()).toList();
-		//return filter;
+		try {
+			String link = "https://www.google.com/search?q=" + request.getRequest().replaceAll(" ", "%20");
+			String img_source = "https://unsplash.com/s/photos/" + request.getRequest().replaceAll(" ", "%20");
+			// System.out.println("parse link:--->" + link + " parse link:--->" + img_source);
+			Document doc = Jsoup.connect(link).timeout(7000).get();
+			Document imgDoc = Jsoup.connect(img_source).timeout(7000).get();
+			doc.outputSettings().charset("ISO-8859-1");
+			imgDoc.outputSettings().charset("ISO-8859-1");
+			Document parsed_google_res = Jsoup.parse(doc.toString());
+			Document img_document_parsed = Jsoup.parse(imgDoc.toString());
+			List<String> img_src = new ArrayList<>();
+			if (img_document_parsed.getElementsByClass("xH5KD") != null)
+				img_src = img_document_parsed.getElementsByClass("xH5KD").select("img[src]").eachAttr("src");
+			Elements page_elements = parsed_google_res.select("div.MjjYud");
+			List<AnswerDto> answers = page_elements.stream().map(x -> {
+				String text = x.selectFirst("div.VwiC3b span") != null ? x.selectFirst("div.VwiC3b span").ownText() : "";
+				String url = x.selectFirst("cite span") != null ? x.selectFirst("cite span").ownText() : "";
+				if (text != "") {
+					AnswerDto answer = new AnswerDto(null, text, url, request.getRequest_id(), "no image", LocalDate.now(),
+							0, true);
+					return answer;
+				} else return null;
+			}).toList();
+			List<AnswerDto> filter = answers.stream().filter(x -> x != null).toList();
+			String jsonArray = objectMapper.writeValueAsString(img_src.stream().limit(5).toArray());
+			// System.out.println(jsonArray);
+			for (AnswerDto answerDto : filter) answerDto.setImagessrc(jsonArray);
+			List<AnswerEntity> entities = filter.stream().map(x -> x.convertToEntity()).toList();
+			return knowHowRepository.saveAll(entities).stream().map(r->r.consertToDto()).toList();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
 	}
 
 	@Override

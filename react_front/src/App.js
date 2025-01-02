@@ -21,6 +21,7 @@ const App = () => {
           let x = JSON.parse(element.imagessrc);
           element.imagessrc = x;
         });
+        
         setResponce(data)
       })
       .catch(error => console.error(error));
@@ -46,7 +47,7 @@ const App = () => {
   const getrequest_srcs = async (id, i) => {
     await fetch_something(get_request_srcs_url + id, "", "GET").then(data => {
       const js = JSON.parse(data[0]);
-      console.log(data, js);
+      // console.log(data, js);
       setImagesSrcs(js)
     })
       .catch(res => console.error(res))
@@ -69,7 +70,6 @@ const App = () => {
   const search_components = () => {
     return <div className='input-group'>
       <input type='text' defaultValue={request_body||""}
-      value={request_body}
       placeholder='Enter your request' onChange={(e) => setRequest(e.currentTarget.value)}/>
       <button className='btn btn-warning border' onClick={() => getLastRequests()}>GetLastResults</button>
       <button className='btn btn-success border' onClick={() => searchFunc(request_body)}>Search</button>
@@ -106,7 +106,7 @@ const App = () => {
       })}
       {!response && lastRequests && <div className='spinner-border'></div>}
       {response && <div className={styles.card_body}>
-        <a target='_blank' rel='noreferrer' href={response[0]?.imagessrc[image_index]}>{"https://unsplash.com/"+ request_body}</a>
+        <a target='_blank' rel='noreferrer' href={response[0]?.imagessrc[image_index]}>{"https://unsplash.com/s/photos/"+ request_body}</a>
         <img
           className={styles.card_image}
           key={response ? [0] : 0}
